@@ -209,21 +209,16 @@ For all supported resources:
 - If servers support deleting a resources, servers SHALL support:
   - `delete`: A resource has been deleted
 
-
-Note: Servers that do not support deleting resources are not expected to support the `delete` trigger event.
-
 - Servers SHOULD support:
   - `update`: A resource has been updated (this is a superset of `finalize`)
 
 
-Note: A single change to a resource may trigger multiple events simultaneously (e.g., both `update` and `note-sign`).
-
-
-Triggering events may not result in a change in the resource content.
-
-Resource-level triggering events that do not have a corresponding business-level event may not result in a notification.
-
-Triggering events that reflect changes a client cannot access may not result in a notification (for example, the client may not be authorized to see the changed data).
+Notes:
+- A single change to a resource may trigger multiple events simultaneously (e.g., both `update` and `note-sign`).
+- Servers that do not support deleting resources are not expected to support the `delete` trigger event.
+- Triggering events may not result in a change in the resource content.
+- Resource-level triggering events that do not have a corresponding business-level event may not result in a notification.
+- Triggering events that reflect changes a client cannot access may not result in a notification (for example, the client may not be authorized to see the changed data).
 
 ### 4.2 Business-Level Triggering Events Requirements
 
