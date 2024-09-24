@@ -199,44 +199,57 @@ The table below defines the resources, their US Core search parameters, and the 
 
 ## 4. Triggering Events and Notifications
 
-### 4.1 Required Triggering Events
+### 4.1 Resource-Level Triggering Events Requirements
 
 For all supported resources:
 
 - Servers SHALL support:
   - `create`: A resource has been created
+ 
+- If servers support deleting a resources, servers SHALL support:
   - `delete`: A resource has been deleted
-  - `finalize`: A resource has reached a state that is considered complete or ready for use. This includes, but is not limited to:
-    - Entering a status such as "final" or "completed"
-    - Reaching a point where the resource is considered clinically relevant and actionable
-    - The resource may still be subject to future updates, such as amendments or corrections which could **re-trigger** `finalize`
+
+
+Note: Servers that do not support deleting resources are not expected to support the `delete` trigger event.
 
 - Servers SHOULD support:
   - `update`: A resource has been updated (this is a superset of `finalize`)
 
-Note: A single change to a resource may trigger multiple events simultaneously (e.g., both `update` and `finalize`).
+
+Note: A single change to a resource may trigger multiple events simultaneously (e.g., both `update` and `note-sign`).
+
+
+Triggering events may not result in a change in the resource content.
+
+Resource-level triggering events that do not have a corresponding business-level event may not result in a notification.
+
+Triggering events that reflect changes a client cannot access may not result in a notification (for example, the client may not be authorized to see the changed data).
+
+### 4.2 Business-Level Triggering Events Requirements
 
 Servers that support the following US Core profiles SHALL also support these associated events:
 
 - "US Core DocumentReference":
-  - `sign`: A clinical note has been signed
-  - `amend`: An existing clinical note has been amended
+  - `note-sign`: A clinical note has been signed
+  - `note-amend`: An existing clinical note has been amended
+
 - "US Core Encounter":
   - `encounter-start`: An encounter has started or a patient has been admitted
   - `encounter-end`: An encounter has ended or a patient has been discharged
-- "US Core Laboratory Observation":
-  - `available`: A result has become available (e.g., preliminary or finalized)
-  - `amend`: An existing result has been amended (e.g., corrected or updated)
+- 
+"US Core Laboratory Observation":
+  - `result-available`: A result has become available (e.g., preliminary or finalized)
+  - `result-amend`: An existing result has been amended (e.g., corrected or updated)
 
 - "US Core DiagnosticReport for Laboratory Results Reporting":
-  - `available`: A result has become available (e.g., preliminary or finalized)
-  - `amend`: An existing result has been amended (e.g., corrected or updated)
+  - `result-available`: A result has become available (e.g., preliminary or finalized)
+  - `result-amend`: An existing result has been amended (e.g., corrected or updated)
 
-Note: These events can be detected by evaluating resource state, even in systems without native event-based processing. Servers are responsible for determining how to identify these events based on their specific implementation.
+Note: Servers are responsible for determining how to identify these events based on their specific implementation.
 
 The triggering event codes above are defined in the `http://hl7.org/fhir/us/core/CodeSystem/trigger` CodeSystem.
 
-### 4.2 Conveying Trigger Event Codes in Notifications
+### 4.3 Conveying Trigger Event Codes in Notifications
 
 When sending a notification, servers SHALL include all applicable triggering event code(s) in the `notification-event` part, `trigger` sub-part of the notification Parameters resource. Multiple trigger codes may be included if a single change satisfies multiple trigger conditions.
 
