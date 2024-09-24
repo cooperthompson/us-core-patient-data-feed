@@ -188,7 +188,7 @@ The table below defines the resources, their US Core search parameters, and the 
 </table>
 
 > **Maintenance of Table 1**
-> 
+>
 > 1. Updates will be made any time new patient-focused resources are added to US Core.
 > 2. For each new resource, filters will be predefined whenever US Core's required search parameters include:
 >    - Patient context
@@ -204,19 +204,20 @@ The table below defines the resources, their US Core search parameters, and the 
 For all supported resources:
 
 - Servers SHALL support:
+
   - `create`: A resource has been created
- 
+
 - If servers support deleting a resources, servers SHALL support:
+
   - `delete`: A resource has been deleted
 
 - Servers SHOULD support:
   - `update`: A resource has been updated (this is a superset of `finalize`)
 
-
 Notes:
+
 - A single change to a resource may trigger multiple events simultaneously (e.g., both `update` and `note-sign`).
 - Servers that do not support deleting resources are not expected to support the `delete` trigger event.
-- Triggering events may not result in a change in the resource content.
 - Resource-level triggering events that do not have a corresponding business-level event may not result in a notification.
 - Triggering events that reflect changes a client cannot access may not result in a notification (for example, the client may not be authorized to see the changed data).
 
@@ -225,14 +226,15 @@ Notes:
 Servers that support the following US Core profiles SHALL also support these associated events:
 
 - "US Core DocumentReference":
+
   - `note-sign`: A clinical note has been signed
   - `note-amend`: An existing clinical note has been amended
 
 - "US Core Encounter":
   - `encounter-start`: An encounter has started or a patient has been admitted
   - `encounter-end`: An encounter has ended or a patient has been discharged
-- 
-"US Core Laboratory Observation":
+- "US Core Laboratory Observation":
+
   - `result-available`: A result has become available (e.g., preliminary or finalized)
   - `result-amend`: An existing result has been amended (e.g., corrected or updated)
 
@@ -240,7 +242,10 @@ Servers that support the following US Core profiles SHALL also support these ass
   - `result-available`: A result has become available (e.g., preliminary or finalized)
   - `result-amend`: An existing result has been amended (e.g., corrected or updated)
 
-Note: Servers are responsible for determining how to identify these events based on their specific implementation.
+Notes:
+
+- Servers are responsible for determining how to identify these events based on their specific implementation.
+- Triggering events may not result in a change in the resource content.
 
 The triggering event codes above are defined in the `http://hl7.org/fhir/us/core/CodeSystem/trigger` CodeSystem.
 
@@ -322,6 +327,7 @@ Servers SHALL allow clients to create Subscriptions according to http://hl7.org/
 For each supported resource type, servers SHALL support the Required filters as specified in Table 1 (e.g., `category` for applicable resources), and SHOULD support the Recommended filters.
 
 ### 5.2 Exapmle Subscription Request
+
 Example Subscription request, demonstrating filters based on patient, category, and trigger event.
 
 ```json
@@ -370,6 +376,7 @@ Example Subscription request, demonstrating filters based on patient, category, 
 4. Clients SHOULD review the persisted Subscription resource to understand which resource types and filters are in effect.
 
 Examples:
+
 - A server that does not support CareTeam resources might remove "CareTeam" from the requested Subscription to indicate that CareTeam resources will never trigger notifications.
 - A server that only supports notifications for laboratory observations might append a "category" filter clause to the requested Subscription's Observation criteria to indicate that other categories will never trigger notifications.
 
@@ -381,16 +388,19 @@ Examples:
 2. Servers that choose to support the Patient Data Feed SHALL implement the following requirements.
 
 ### 6.2 Resource and Filter Support
+
 1. Servers SHALL support at least one resource type from the list in Table 1.
 2. Servers MAY support filters beyond those listed in Table 1 for each resource type.
 3. Servers SHOULD align any additional filters with existing search parameter names, when applicable.
 
 ### 6.4 Subscription Handling
+
 1. Servers SHALL support the `rest-hook` channel type for notification delivery.
 2. Servers SHALL support the `empty` and `id-only` payload types for notifications.
 3. Servers MAY support additional channel types and payload types.
 
 ### 6.5 Profile-Specific Requirements
+
 1. Servers that support the US Core Encounter profile SHALL support subscriptions for Encounter resources.
 2. Servers that support the US Core DocumentReference profile SHALL support subscriptions for DocumentReference resources.
 3. Servers that support the US Core Laboratory Result Observation profile SHALL support subscriptions for Observation resources, including:
@@ -398,11 +408,12 @@ Examples:
    - Acceptance of subscription requests for Observation resources without a category filter, with appropriate handling as described in section 5.2.
 
 ### 6.6 Documentation and Error Handling
+
 1. Servers SHALL clearly document the following in their developer-facing documentation:
    - Supported resources and filters
    - Supported notification triggers
    - Supported channel types
-   - Supported payload types 
+   - Supported payload types
 2. Servers SHOULD provide clear error messages when rejecting subscription requests due to unsupported features.
 
 ## 7. Benefits
@@ -417,6 +428,7 @@ Examples:
 The standardization of how to model and publish topics for discovery is ongoing work in the FHIR community. US Core's Patient Data Feed does not yet address the standardization of the SubscriptionTopic resource itself. Instead, it focuses on standardizing the functionality of the `patient-data-feed` topic and the expectations of Subscription management, allowing for interoperability based on the canonical URL, supported resources, filters, and triggers.
 
 Future work may include:
+
 1. Improving the structure and content of SubscriptionTopic resources
 2. Enhancing discovery mechanisms for available topics, triggers, and filters
 3. Formalizing the compositional nature of topics and triggers
